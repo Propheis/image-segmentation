@@ -75,14 +75,14 @@ void draw() {
     stroke(255);
 
     for (int i=1; i<numCols; i++) { // vertical subdivisions
-	int x = (int) (i * w/(float)numCols);
-	line( x+xOffset, 0+yOffset, x+xOffset, h-1+yOffset );
-    }
+       int x = (int) (i * w/(float)numCols);
+       line( x+xOffset, 0+yOffset, x+xOffset, h-1+yOffset );
+   }
 
     for (int i=1; i<numRows; i++) { // horizontal subdivisions
-	int y = (int) (i * h/(float)numRows);
-	line( 0+xOffset, y+yOffset, w-1+xOffset, y+yOffset );
-    }
+       int y = (int) (i * h/(float)numRows);
+       line( 0+xOffset, y+yOffset, w-1+xOffset, y+yOffset );
+   }
 
     // Status message: image filename, method, and thresholds
 
@@ -90,29 +90,29 @@ void draw() {
 
     if (currentImage == OUTPUT)
         switch (methodApplied) {
-        case HISTO:
+            case HISTO:
             msg = msg + " with " + str(numRows) + "x" + str(numCols) + " histogram thresholding (threshold = " + str(thresholds[0]) + ")";
             break;
-        case KMEANS:
+            case KMEANS:
             msg = msg + " with k-means thresholding (k = " + str(numThresholds+1) + ", thresholds =";
             for (int i=0; i<numThresholds; i++)
                 msg = msg + ' ' + str(thresholds[i]);
             msg = msg + ")";
             break;
-        case OTSU:
+            case OTSU:
             msg = msg + " with " + str(numRows) + "x" + str(numCols) + " Otsu's method (threshold = " + str(thresholds[0]) + ")";
             break;
         }
-    
-    fill( 255 );
-    noStroke();
-    rect( 10-4, winHeight-10-16-1, 16*msg.length()+4+4, 16+6 );
 
-    fill( 0 );
-    stroke( 255 );
-    text( msg, 10, winHeight-10 );
-}
- 
+        fill( 255 );
+        noStroke();
+        rect( 10-4, winHeight-10-16-1, 16*msg.length()+4+4, 16+6 );
+
+        fill( 0 );
+        stroke( 255 );
+        text( msg, 10, winHeight-10 );
+    }
+
 
 // Handle a key press
 
@@ -122,85 +122,85 @@ int numCols = 1;		// subdivision columns for Otsu
 void keyPressed() {
     switch (key) {
 
-    case CODED:
+        case CODED:
         switch (keyCode) {
-        case RIGHT:
-	    numCols++;
+            case RIGHT:
+            numCols++;
             break;
-        case LEFT:
-	    if (numCols > 1)
-		numCols--;
-            break;
-        case UP:
-	    numRows++;
-            break;
-        case DOWN:
-	    if (numRows > 1)
-		numRows--;
-            break;
-        }
-        break;
+            case LEFT:
+            if (numCols > 1)
+              numCols--;
+          break;
+          case UP:
+          numRows++;
+          break;
+          case DOWN:
+          if (numRows > 1)
+              numRows--;
+          break;
+      }
+      break;
 
-    case 'f':
-        selectInput( "Select an image", "readImageFromFile", new File(dataPath("data")) );
-        break;
+      case 'f':
+      selectInput( "Select an image", "readImageFromFile", new File(dataPath("data")) );
+      break;
 
-    case 'i':
-        currentImage = INPUT;
-        break;
+      case 'i':
+      currentImage = INPUT;
+      break;
 
-    case 't':
-        currentImage = OUTPUT;
-        break;
+      case 't':
+      currentImage = OUTPUT;
+      break;
 
-    case 'h':
-        applyHistogramThresholding();
-        methodApplied = HISTO;
-        currentImage = OUTPUT;
-        break;
+      case 'h':
+      applyHistogramThresholding();
+      methodApplied = HISTO;
+      currentImage = OUTPUT;
+      break;
 
-    case 'o':
-        applyOtsusMethod();
-        methodApplied = OTSU;
-        currentImage = OUTPUT;
-        break;
+      case 'o':
+      applyOtsusMethod();
+      methodApplied = OTSU;
+      currentImage = OUTPUT;
+      break;
 
-    case 'k':
+      case 'k':
+      applyKMeansClustering();
+      methodApplied = KMEANS;
+      currentImage = OUTPUT;
+      break;
+
+      case '+':
+      case '=':
+      k++;
+      applyKMeansClustering();
+      methodApplied = KMEANS;
+      currentImage = OUTPUT;
+      break;
+
+      case '-':
+      case '_':
+      if (k > 2) {
+        k--;
         applyKMeansClustering();
         methodApplied = KMEANS;
         currentImage = OUTPUT;
-        break;
-
-    case '+':
-    case '=':
-        k++;
-        applyKMeansClustering();
-        methodApplied = KMEANS;
-        currentImage = OUTPUT;
-        break;
-
-    case '-':
-    case '_':
-        if (k > 2) {
-            k--;
-            applyKMeansClustering();
-            methodApplied = KMEANS;
-            currentImage = OUTPUT;
-        }
-        break;
+    }
+    break;
 
     case '?':
-        println( " f   get image from file" );
-        println( " i   show input image" );
-        println( " t   show thresholded image" );
-        println( " h   apply histogram thresholding" );
-        println( " k   apply k-means thresholding" );
-        println( " o   apply Otsu's method" );
-        println( " +   increase k and apply k-means" );
-        println( " -   decrease k and apply k-means" );
-        println( " ?   help" );
-        break;
-    }
+    println( " f   get image from file" );
+    println( " i   show input image" );
+    println( " t   show thresholded image" );
+    println( " h   apply histogram thresholding" );
+    println( " k   apply k-means thresholding" );
+    println( " o   apply Otsu's method" );
+    println( " +   increase k and apply k-means" );
+    println( " -   decrease k and apply k-means" );
+    println( " ?   help" );
+    break;
+}
 }
 
 
@@ -209,9 +209,9 @@ void keyPressed() {
 void readImageFromFile( File file ) {
     readImage( file.getPath() );
 }
-    
+
 void readImage( String imageFilename ) {
-    
+
     currentImage = INPUT;
 
     // Read the image
@@ -228,8 +228,8 @@ void readImage( String imageFilename ) {
     for (i=imageFilename.length()-1; i>=0; i--)
         if (imageFilename.charAt(i) == '/' || imageFilename.charAt(i) == '\\')
             break;
-    imageFilename = imageFilename.substring(i+1);
-}
+        imageFilename = imageFilename.substring(i+1);
+    }
 
 
 // Create a grey output image as a placeholder
@@ -391,6 +391,56 @@ void applyKMeansClustering()
     // Perform k-means
 
     // YOUR CODE HERE
+    int threshold = 2;
+    int delta_u   = 0;
+
+
+    int[] u = new int[k];
+
+    // initialize means
+    for (int i = 0; i < k; i++)
+        u[i] = histo[random(0, histo.length)];
+
+    do {
+        // Put each point into it's closest cluster
+        ArrayList<int>[] S = new ArrayList<int>[k];
+
+        for (int i = 0; i < k; i++)
+            S[i] = new ArrayList<int>();
+
+        for (int i = 0; i < histo.length; i++) {
+            int nearest_mean;
+        // Calculate nearest cluster
+        int best_distance = -1;
+        for (int j = 0; j < k; j++) {
+            // get distance from histo[i] to u[j]
+            int distance = abs(i - u[j]);
+
+            if (distance < best_distance) {
+                best_distance = distance;
+                nearest_mean = j;
+            }
+        }
+        S[nearest_mean].add(i);
+
+        // calculate new centroids
+        for (int i = 0; i < k; i++) {
+            int sum_xij = 0;
+            int u_new;
+
+            for (int j = 0; j < S[i].size(); j++)
+                sum_xij += S[i].get(j);
+            
+            u_new = sum_xij / S[i].size();
+            // calculate movement in u's
+            delta_u += abs(u_new - u[i]);
+            // update u[] with new values
+            u[i] = u_new;
+        }
+    } while (delta_u > threshold)
+}
+
+
 
     // Show the thresholded image
 
