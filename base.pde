@@ -391,56 +391,6 @@ void applyKMeansClustering()
     // Perform k-means
 
     // YOUR CODE HERE
-    int threshold = 2;
-    int delta_u   = 0;
-
-
-    int[] u = new int[k];
-
-    // initialize means
-    for (int i = 0; i < k; i++)
-        u[i] = histo[random(0, histo.length)];
-
-    do {
-        // Put each point into it's closest cluster
-        ArrayList<int>[] S = new ArrayList<int>[k];
-
-        for (int i = 0; i < k; i++)
-            S[i] = new ArrayList<int>();
-
-        for (int i = 0; i < histo.length; i++) {
-            int nearest_mean;
-        // Calculate nearest cluster
-        int best_distance = -1;
-        for (int j = 0; j < k; j++) {
-            // get distance from histo[i] to u[j]
-            int distance = abs(i - u[j]);
-
-            if (distance < best_distance) {
-                best_distance = distance;
-                nearest_mean = j;
-            }
-        }
-        S[nearest_mean].add(i);
-
-        // calculate new centroids
-        for (int i = 0; i < k; i++) {
-            int sum_xij = 0;
-            int u_new;
-
-            for (int j = 0; j < S[i].size(); j++)
-                sum_xij += S[i].get(j);
-            
-            u_new = sum_xij / S[i].size();
-            // calculate movement in u's
-            delta_u += abs(u_new - u[i]);
-            // update u[] with new values
-            u[i] = u_new;
-        }
-    } while (delta_u > threshold)
-}
-
-
 
     // Show the thresholded image
 
