@@ -395,7 +395,7 @@ void applyKMeansClustering()
     int[] U = new int[k];
     
     for (int i = 0; i < numThresholds; i++)
-      T[i] = int(random(0, 255));
+      T[i] = int(random(1, 254));
     T = sort(T);
     
     int deltaT;
@@ -419,6 +419,9 @@ void applyKMeansClustering()
           startPoint = T[i - 1];
           endPoint = T[i];
         }
+        
+        System.out.println("Start: " + startPoint + "\nEnd: " + endPoint);
+        System.out.println("");
         
         int numPixels = 0;
         int numerator = 0;
