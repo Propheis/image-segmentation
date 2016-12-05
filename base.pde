@@ -420,9 +420,6 @@ void applyKMeansClustering()
           endPoint = T[i];
         }
         
-        System.out.println("Start: " + startPoint + "\nEnd: " + endPoint);
-        System.out.println("");
-        
         int numPixels = 0;
         int numerator = 0;
         for (int x = startPoint; x < endPoint; x++) {
@@ -470,10 +467,52 @@ void applyOtsusMethod()
     // Perform Otsu's method
 
     // YOUR CODE HERE
+    int totalPixels = image[INPUT].width * image[INPUT].height;
+    int maxT = 0;
+    double maxVariance = 0;
+    for (int T = 1; T < histo.length; T++) {
+        int u1 = 0;
+        int u2 = 0;
+        int N1 = 0;
+        int N2 = 0;
+
+        // calculate c1 and c2
+        for (int i = 0; i < T; i++) {
+            N1 += histo[i];
+            u1 += histo[i] * i;
+        }
+        for (int i = T; i < histo.length; i++) {
+            N2 += histo[i];
+            u2 += histo[i] * i;
+        }
+        
+        System.out.println("T: " + T);
+        System.out.println("u1: " + u1 + " N1: " + N1);
+        System.out.println("u2: " + u2 + " N2: " + N2);
+
+        if (N1 != 0)
+          u1 /= N1;
+        if (N2 != 0)
+          u2 /= N2;
+          
+        double variance = N1 * N2 * Math.pow((u1 - u2), 2);
+        if (variance < 0)
+          variance *= -1;
+        System.out.println("Variance: " + variance);
+        System.out.println("");
+
+        if (variance > maxVariance) {
+            maxT = T;
+            maxVariance = variance;
+        }
+
+    }
+    
+    System.out.println("MaxVariance: " + maxVariance);
 
     // Show the thresholded image
 
-    thresholds[0] = 0;  // YOUR CODE HERE
+    thresholds[0] = maxT;  // YOUR CODE HERE
 
     showThresholdedImage();
 }
