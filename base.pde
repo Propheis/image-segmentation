@@ -391,11 +391,58 @@ void applyKMeansClustering()
     // Perform k-means
 
     // YOUR CODE HERE
-
+    int[] T = new int[numThresholds];
+    int[] U = new int[k];
+    
+    for (int i = 0; i < numThresholds; i++)
+      T[i] = int(random(0, 255));
+    T = sort(T);
+    
+    int deltaT;
+    do {
+      deltaT = 0;
+      
+      // Calculate new averages
+      for (int i = 0; i < k; i++) {
+        int startPoint = 0;
+        int endPoint = 0;
+        
+        if (i == 0) {
+          startPoint = 0;
+          endPoint = T[i];
+        }
+        else if (i == k-1) {
+          startPoint = T[i-1];
+          endPoint = histo.length;
+        }
+        else {
+          startPoint = T[i - 1];
+          endPoint = T[i];
+        }
+        
+        int numPixels = 0;
+        int numerator = 0;
+        for (int x = startPoint; x < endPoint; x++) {
+          numPixels += histo[x];
+          numerator += histo[x] * x;
+        }
+        
+        U[i] = numerator / numPixels;
+      } // end calculate new averages
+      
+      // Update thresholds
+      for (int t = 0; t < numThresholds; t++) {
+        int newT = (U[t] + U[t+1]) / 2; 
+        deltaT += abs(newT - T[t]);
+        T[t] = newT;
+      } // end update thresholds
+      
+    } while (deltaT > 0);
+    
     // Show the thresholded image
 
     for (int i=0; i<k-1; i++) 
-        thresholds[i] = 0; // YOUR CODE HERE
+        thresholds[i] = T[i]; // YOUR CODE HERE
 
     showThresholdedImage();
 }
