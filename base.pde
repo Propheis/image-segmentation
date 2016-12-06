@@ -116,8 +116,8 @@ void draw() {
 
 // Handle a key press
 
-int numRows = 1;		// subdivision rows for Otsu
-int numCols = 1;		// subdivision columns for Otsu
+int numRows = 1;        // subdivision rows for Otsu
+int numCols = 1;        // subdivision columns for Otsu
 
 void keyPressed() {
     switch (key) {
@@ -470,23 +470,24 @@ void applyOtsusMethod()
     int totalPixels = image[INPUT].width * image[INPUT].height;
     int maxT = 0;
     double maxVariance = 0;
-    for (int T = 1; T < histo.length; T++) {
+    for (int S = 1; S < histo.length; S++) {
         int u1 = 0;
         int u2 = 0;
-        int N1 = 0;
-        int N2 = 0;
+        double N1 = 0;
+        double N2 = 0;
 
         // calculate c1 and c2
-        for (int i = 0; i < T; i++) {
+        for (int i = 0; i < S; i++) {
             N1 += histo[i];
             u1 += histo[i] * i;
         }
-        for (int i = T; i < histo.length; i++) {
+        for (int i = S; i < histo.length; i++) {
             N2 += histo[i];
             u2 += histo[i] * i;
         }
-        
-        System.out.println("T: " + T);
+        N1 /= totalPixels;
+        N2 /= totalPixels;
+        System.out.println("T: " + S);
         System.out.println("u1: " + u1 + " N1: " + N1);
         System.out.println("u2: " + u2 + " N2: " + N2);
 
@@ -494,7 +495,8 @@ void applyOtsusMethod()
           u1 /= N1;
         if (N2 != 0)
           u2 /= N2;
-          
+
+        
         double variance = N1 * N2 * Math.pow((u1 - u2), 2);
         if (variance < 0)
           variance *= -1;
@@ -502,13 +504,14 @@ void applyOtsusMethod()
         System.out.println("");
 
         if (variance > maxVariance) {
-            maxT = T;
+            maxT = S;
             maxVariance = variance;
         }
 
     }
     
     System.out.println("MaxVariance: " + maxVariance);
+    System.out.println("Threshold: " + maxT);
 
     // Show the thresholded image
 
