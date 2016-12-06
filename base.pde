@@ -420,14 +420,14 @@ void applyKMeansClustering()
           endPoint = T[i];
         }
         
-        int numPixels = 0;
-        int numerator = 0;
+        double numPixels = 0;
+        double numerator = 0;
         for (int x = startPoint; x < endPoint; x++) {
           numPixels += histo[x];
           numerator += histo[x] * x;
         }
         
-        U[i] = numerator / numPixels;
+        U[i] = (int)(numerator / numPixels);
       } // end calculate new averages
       
       // Update thresholds
@@ -487,9 +487,6 @@ void applyOtsusMethod()
         }
         N1 /= totalPixels;
         N2 /= totalPixels;
-        System.out.println("T: " + S);
-        System.out.println("u1: " + u1 + " N1: " + N1);
-        System.out.println("u2: " + u2 + " N2: " + N2);
 
         if (N1 != 0)
           u1 /= N1;
@@ -500,8 +497,6 @@ void applyOtsusMethod()
         double variance = N1 * N2 * Math.pow((u1 - u2), 2);
         if (variance < 0)
           variance *= -1;
-        System.out.println("Variance: " + variance);
-        System.out.println("");
 
         if (variance > maxVariance) {
             maxT = S;
@@ -509,9 +504,6 @@ void applyOtsusMethod()
         }
 
     }
-    
-    System.out.println("MaxVariance: " + maxVariance);
-    System.out.println("Threshold: " + maxT);
 
     // Show the thresholded image
 
