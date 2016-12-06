@@ -467,38 +467,54 @@ void applyOtsusMethod()
     // Perform Otsu's method
 
     // YOUR CODE HERE
-    int totalPixels = image[INPUT].width * image[INPUT].height;
+    double totalPixels = image[INPUT].width * image[INPUT].height;
     int maxT = 0;
     double maxVariance = 0;
-    for (int T = 1; T < histo.length; T++) {
-        int u1 = 0;
-        int u2 = 0;
-        int N1 = 0;
-        int N2 = 0;
+    for (int T = 1; T < histo.length - 1; T++) {
+      System.out.println("T: " + T);
+        double u0 = 0;
+        double u1 = 0;
+        double n0 = 0; // num pixels in first class
+        double n1 = 0; // num pixels in second class
 
-        // calculate c1 and c2
+        double w0 = 0; // probability of being in first class
+        double w1 = 0; // probability of being in second class
+
+        // Calculate w0
         for (int i = 0; i < T; i++) {
-            N1 += histo[i];
-            u1 += histo[i] * i;
+            n0 += histo[i];
         }
-        for (int i = T; i < histo.length; i++) {
-            N2 += histo[i];
-            u2 += histo[i] * i;
-        }
+        System.out.println("n0: " + n0 + " totalPixels: " + totalPixels);
+        w0 = n0 / totalPixels;
         
-        System.out.println("T: " + T);
-        System.out.println("u1: " + u1 + " N1: " + N1);
-        System.out.println("u2: " + u2 + " N2: " + N2);
+        // Calculate w1
+        for (int i = T; i < histo.length; i++) {
+            n1 += histo[i];
+        }
+        w1 = n1 / totalPixels;
+        System.out.println("n1: " + n1 + " totalPixels: " + totalPixels);
 
-        if (N1 != 0)
-          u1 /= N1;
-        if (N2 != 0)
-          u2 /= N2;
-          
-        double variance = N1 * N2 * Math.pow((u1 - u2), 2);
-        if (variance < 0)
-          variance *= -1;
+        // This means variance will be 0
+        if (w0 == 0.0 || w1 == 0.0) {
+          if (w0 == 0) System.out.println("w0 = 0");
+          else System.out.println("w1 = 0");
+          continue;
+        }
+
+        // Calculate u0
+        for (int i = 0; i < T; i++)
+            u0 += histo[i];
+        u0 /= w0;
+        // Calculate u1
+        for (int i = T; i < histo.length; i++)
+            u1 += histo[i];
+        u1 /= w1;
+
+        double variance = w0 * w1 * Math.pow(u0 - u1, 2);
+        System.out.println("u0: " + u0 + " w0: " + w0);
+        System.out.println("u1: " + u1 + " w1: " + w1);
         System.out.println("Variance: " + variance);
+        System.out.println("MaxVariance: " + maxVariance);
         System.out.println("");
 
         if (variance > maxVariance) {
